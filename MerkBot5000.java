@@ -1,32 +1,45 @@
 package Decepticons;
 import robocode.*;
+import robocode.AdvancedRobot
+
 //import java.awt.Color;
 
 // API help : https://robocode.sourceforge.io/docs/robocode/robocode/Robot.html
 
 /**
  * MerkBot5000 - a robot by (your name here)
+ *
  */
-public class MerkBot5000 extends Robot
+// Extending advanced robot allows my robot to do more in one turn if possible
+public class MerkBot5000 extends AdvancedRobot
 {
 	/**
 	 * run: MerkBot5000's default behavior
 	 */
+	// Robot main loop when robot is idle
 	public void run() {
-		// Initialization of the robot should be put here
-
-		// After trying out your robot, try uncommenting the import at the top,
-		// and the next line:
-
-		// setColors(Color.red,Color.blue,Color.green); // body,gun,radar
-
-		// Robot main loop
-		while(true) {
-			// Replace the next 4 lines with any behavior you would like
-			ahead(100);
-			turnGunRight(180);
-			back(100);
-			turnGunRight(180);
+		//moveAmount makes the bot ride along the border of the arena
+		moveAmount = Math.max(getBattleFieldWidth(),getBattleFieldHeight());
+		//Allows bot to keep its back along the wall
+		peek = false
+		
+		turnLeft(getHeadin() % 90);
+		//keeps wall riding momentum
+		ahead(moveAmount)
+		turnRight(90);
+		//Scanner does 360 degree loop for enemies
+		turnRadarRightRadians(Double.POSTITIVE_INFINITY);
+		do {
+			scan();
+		} while(true) {
+			//Makes Bot turn back against wall;
+			peek = true
+			//Moves along wall		
+			ahead(moveAmount);
+			//Makes Bot turn back against wall;
+			peek = false
+			//Goes to next wall
+			turnRight(90);		
 		}
 	}
 
@@ -34,15 +47,16 @@ public class MerkBot5000 extends Robot
 	 * onScannedRobot: What to do when you see another robot
 	 */
 	public void onScannedRobot(ScannedRobotEvent e) {
-		// Replace the next line with any behavior you would like
-		fire(3);
+		//Depicts the strength of gun
+		
+		fire(2);
 	}
 
 	/**
 	 * onHitByBullet: What to do when you're hit by a bullet
 	 */
 	public void onHitByBullet(HitByBulletEvent e) {
-		// Replace the next line with any behavior you would like
+		//Moves back when shot
 		back(10);
 	}
 	
@@ -50,7 +64,7 @@ public class MerkBot5000 extends Robot
 	 * onHitWall: What to do when you hit a wall
 	 */
 	public void onHitWall(HitWallEvent e) {
-		// Replace the next line with any behavior you would like
-		back(30);
+		//moves after wall contact
+		back(20);
 	}	
 }
